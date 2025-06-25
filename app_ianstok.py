@@ -2,6 +2,31 @@ import streamlit as st
 import sqlite3
 import pandas as pd
 
+# --- Login Admin ---
+def login():
+    st.title("🔐 Login Admin")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    
+    if st.button("Login"):
+        if username == "admin" and password == "1234":
+            st.session_state['login'] = True
+            st.experimental_rerun()
+        else:
+            st.error("Username atau password salah!")
+
+if 'login' not in st.session_state:
+    st.session_state['login'] = False
+
+if not st.session_state['login']:
+    login()
+    st.stop()  # Hentikan kode kalau belum login
+st.set_page_config(
+    page_title="Aplikasi Stok Barang ",
+    page_icon="📦",
+    layout="centered"
+)
+
 # Koneksi ke database
 conn = sqlite3.connect('stok_barang.db', check_same_thread=False)
 cursor = conn.cursor()
