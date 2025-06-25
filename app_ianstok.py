@@ -114,6 +114,11 @@ if not df.empty:
             st.rerun()
 
     if st.button("hapus data ini"):
+        cursor.execute("DELETE FROM stok WHERE id=?", (selected_id,))
+        conn.commit()
+        st.warning("⚠️ Data berhasil dihapus!")
+        st.rerun()
+
 
 
 # Export Excel
