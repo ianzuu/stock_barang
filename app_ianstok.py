@@ -11,7 +11,7 @@ def login():
     if st.button("Login"):
         if username == "admin" and password == "1234":
             st.session_state['login'] = True
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Username atau password salah!")
 
