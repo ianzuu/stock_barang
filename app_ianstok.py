@@ -113,7 +113,7 @@ if not df.empty:
             st.success("✅ Data berhasil diperbarui!")
             st.rerun()
 
-    if st.button("hapus data ini")
+    if st.button("hapus data ini"):
 
 
 # Export Excel
