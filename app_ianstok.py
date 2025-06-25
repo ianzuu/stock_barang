@@ -71,12 +71,50 @@ with st.form("form_input"):
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''', (kode, nama, qty_awal, qty_masuk, qty_keluar, qty_seharusnya, qty_real, qty_selisih))
         conn.commit()
-        st.success("? Data berhasil disimpan!")
+        st.success(" Data berhasil disimpan!")
 
 # Menampilkan data
-st.subheader("?? Data Stok Barang")
+st.subheader(" Data Stok Barang")
 df = pd.read_sql_query("SELECT * FROM stok", conn)
 st.dataframe(df)
+
+st.subheader("✏️ Edit / 🗑️ Hapus Data")
+
+# Pilih baris yang ingin diedit atau dihapus
+if not df.empty:
+    selected_id = st.selectbox("Pilih ID Data", df["id"])
+
+    selected_row = df[df["id"] == selected_id].iloc[0]
+
+    st.markdown("### Edit Data")
+    with st.form("form_edit"):
+        kode = st.text_input("Kode Barang", selected_row["kode_barang"])
+        nama = st.text_input("Nama Barang", selected_row["nama_barang"])
+        qty_awal = st.number_input("Qty Awal", value=int(selected_row["qty_awal"]))
+        qty_masuk = st.number_input("Qty Masuk", value=int(selected_row["qty_masuk"]))
+        qty_keluar = st.number_input("Qty Keluar", value=int(selected_row["qty_keluar"]))
+        qty_real = st.number_input("Qty Real", value=int(selected_row["qty_real"]))
+
+        update = st.form_submit_button("💾 Simpan Perubahan")
+        if update:
+            qty_seharusnya = qty_awal + qty_masuk - qty_keluar
+            qty_selisih = qty_real - qty_seharusnya
+
+            cursor.execute('''
+                UPDATE stok SET
+                    kode_barang=?, nama_barang=?, qty_awal=?, qty_masuk=?,
+                    qty_keluar=?, qty_seharusnya=?, qty_real=?, qty_selisih=?
+                WHERE id=?
+            ''', (
+                kode, nama, qty_awal, qty_masuk, qty_keluar,
+                qty_seharusnya, qty_real, qty_selisih, selected_id
+            ))
+            conn.commit()
+            st.success("✅ Data berhasil diperbarui!")
+            st.rerun()
+
+    if st.button("
+
 
 # Export Excel
 def export_excel():
